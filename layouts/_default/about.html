@@ -1,0 +1,19 @@
+{{ define "main" }}
+    <section class="page-hero">
+        <div class="container">
+            {{ partial "breadcrumb.html" . }}
+            <h1 class="page-title">{{ .Title }}</h1>
+        </div>
+    </section>
+
+    <section class="content-page">
+        <div class="container-narrow">
+            <div class="prose">
+                {{ .Content }}
+            </div>
+            <div class="page-back">
+                <a href="/" class="btn btn-secondary">← Back to Home</a>
+            </div>
+        </div>
+    </section>
+{{ end }}

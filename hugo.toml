@@ -1,0 +1,71 @@
+# Set baseURL to your real address before you deploy. Canonical links, the
+# sitemap and share cards are all built from it.
+baseURL = 'https://example.com/'
+locale = 'en-us'
+title = 'My Gallery'
+
+# robots.txt is generated from layouts/robots.txt so the sitemap line
+# follows baseURL. Never ship a static one with a hardcoded URL.
+enableRobotsTXT = true
+
+# A gallery has no tags or categories, so don't build empty taxonomy pages.
+disableKinds = ['taxonomy', 'term']
+
+# Photos are published only as the resized WebP versions the layouts ask for.
+# Without this Hugo also copies each original (full size, EXIF and GPS data
+# intact) into the public site, where anyone who guesses the filename can
+# download it.
+[[cascade]]
+  [cascade.build]
+    publishResources = false
+
+[params]
+  description = 'A public photo gallery. Replace this with one honest sentence about whose photos these are.'
+  tagline = 'Photos from travels, streets and shelves.'
+  author = 'Your Name'
+  # Two letters shown in the little neon tag beside the site name in the nav.
+  navCode = 'MG'
+  # Used for og:locale on share cards, e.g. en_GB or en_AU.
+  ogLocale = 'en_US'
+
+  # Optional GA4 Measurement ID. Leave empty and no analytics script and no
+  # consent banner are shipped. Set it and the tag loads with analytics
+  # denied until a visitor accepts the banner.
+  #
+  # Must stay above [params.social]: a bare key after a subtable header
+  # would be parsed as part of that subtable.
+  googleAnalytics = ''
+
+  [params.social]
+    # Delete any line you don't need. social-icons.html only renders what's set.
+    instagram = 'https://instagram.com/example'
+    x = 'https://x.com/example'
+    youtube = 'https://youtube.com/@example'
+
+[menu]
+  [[menu.main]]
+    name = 'Gallery'
+    url = '/#gallery'
+    weight = 1
+
+  [[menu.main]]
+    name = 'About'
+    url = '/about/'
+    weight = 2
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[outputs]
+  home = ['HTML', 'RSS']
+  section = ['HTML', 'RSS']
+
+[security]
+  allowContent = ['text/html', 'text/markdown', 'text/plain']
+
+[caches]
+  [caches.getresource]
+    dir = ':cacheDir/:project'
+    maxAge = '1h'

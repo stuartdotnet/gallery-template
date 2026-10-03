@@ -1,0 +1,34 @@
+{{ define "main" }}
+    {{/* ================= Hero — the neon board ================= */}}
+    <section id="top" class="hero">
+        <div class="container">
+            <div class="hero-board screen">
+                <h1 class="hero-title">{{ .Site.Title }}</h1>
+                <div class="hero-spectrum" aria-hidden="true">
+                    <span style="--node-color: var(--magenta)"></span>
+                    <span style="--node-color: var(--cyan)"></span>
+                    <span style="--node-color: var(--lime)"></span>
+                </div>
+                <div class="hero-adjacent">
+                    <p class="hero-roles">{{ with .Params.photos }}{{ len . }} photos{{ else }}no photos yet{{ end }}</p>
+                    <a class="hero-adj hero-adj--next" href="#gallery">
+                        <span class="hero-adj-body">
+                            <span class="hero-adj-caption">Jump to</span>
+                            <span class="hero-adj-name">the gallery</span>
+                        </span>
+                        <span class="hero-adj-arrow" aria-hidden="true">&#9654;</span>
+                    </a>
+                </div>
+            </div>
+            <p class="hero-description">{{ .Site.Params.tagline }}</p>
+            <a class="hero-down" href="#gallery"><span aria-hidden="true">▼</span> Gallery</a>
+        </div>
+    </section>
+
+    <section id="gallery" class="gallery-section home-section">
+        <div class="container">
+            {{ with .Content }}<div class="gallery-intro">{{ . }}</div>{{ end }}
+        </div>
+        {{ partial "gallery.html" . }}
+    </section>
+{{ end }}

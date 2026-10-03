@@ -1,0 +1,61 @@
+{{/*
+    The photo mosaic and its lightbox. Call with the page that owns the
+    photos: {{ partial "gallery.html" . }}. Photos are the `photos` list in
+    that page's front matter; each `image` is a file sitting beside it.
+
+    Landscape tiles cycle through these shapes; portrait photos always get
+    gi-portrait so they read tall instead of being force-cropped into a
+    landscape-shaped box. Each shape's Fill target matches its CSS grid-cell
+    aspect ratio so object-fit: cover in the browser doesn't re-crop on top
+    of the crop Hugo already made.
+*/}}
+{{ if .Params.photos }}
+{{ $landscapeSizes := slice "gi-big" "gi-small" "gi-tall" "gi-small" "gi-small" }}
+{{ $landscapeCrops := dict "gi-big" "1800x640" "gi-small" "1400x490" "gi-tall" "1200x860" }}
+<div class="gallery-wide">
+    <ul class="gallery-grid">
+        {{ $landscapeIndex := 0 }}
+        {{ range $index, $meta := .Params.photos }}
+        {{ with $.Resources.GetMatch $meta.image }}
+        {{ $portrait := lt .Width .Height }}
+        {{ $size := "gi-portrait" }}
+        {{ $cropSpec := "1000x1450" }}
+        {{ if not $portrait }}
+            {{ $size = index $landscapeSizes (mod $landscapeIndex (len $landscapeSizes)) }}
+            {{ $cropSpec = index $landscapeCrops $size }}
+            {{ $landscapeIndex = add $landscapeIndex 1 }}
+        {{ end }}
+        {{ $tile := .Fill (printf "%s webp q82 smart" $cropSpec) }}
+        {{ $full := .Resize "1800x webp q85" }}
+        <li class="gallery-item {{ $size }}" data-observe>
+            <button type="button" class="gallery-thumb" data-full="{{ $full.RelPermalink }}" data-alt="{{ $meta.alt }}" data-caption="{{ with $meta.caption }}{{ . }}{{ end }}" data-w="{{ $full.Width }}" data-h="{{ $full.Height }}">
+                <img src="{{ $tile.RelPermalink }}" alt="{{ $meta.alt }}" loading="lazy" decoding="async" width="{{ $tile.Width }}" height="{{ $tile.Height }}">
+                <span class="gallery-overlay" aria-hidden="true">
+                    <span class="gallery-overlay-icon">＋</span>
+                    <span class="gallery-overlay-text">{{ with $meta.caption }}{{ . }}{{ else }}{{ $meta.alt }}{{ end }}</span>
+                </span>
+            </button>
+        </li>
+        {{ else }}
+        {{ warnf "gallery: %q is listed in photos but no such file sits next to %s" $meta.image $.File.Path }}
+        {{ end }}
+        {{ end }}
+    </ul>
+</div>
+{{ else }}
+<div class="container">
+    <p class="gallery-empty">The gallery's empty for now. Photos are on their way.</p>
+</div>
+{{ end }}
+
+{{/* Lightbox: one dialog, reused for every photo. See scripts.js. */}}
+<dialog class="lightbox" id="lightbox" aria-label="Photo viewer">
+    <button type="button" class="lightbox-close" aria-label="Close">&times;</button>
+    <button type="button" class="lightbox-prev" aria-label="Previous photo">&#8249;</button>
+    <button type="button" class="lightbox-next" aria-label="Next photo">&#8250;</button>
+    <figure class="lightbox-figure">
+        <img class="lightbox-img" src="" alt="">
+        <figcaption class="lightbox-caption"></figcaption>
+        <p class="lightbox-count"></p>
+    </figure>
+</dialog>

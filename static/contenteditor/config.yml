@@ -1,0 +1,67 @@
+# Sveltia CMS config: the photo upload screen at /contenteditor/.
+#
+# Two values below MUST be set to match your site before it works:
+#   1. backend.repo — your GitHub repo, "owner/name"
+#   2. site_url     — the same address as baseURL in hugo.toml
+#
+# Signing in: with no `base_url` here, Sveltia offers "Sign in with GitHub
+# token" and you paste a fine-grained personal access token (Contents:
+# read and write, on this one repo). That needs no extra infrastructure.
+# For a proper "Sign in with GitHub" button, deploy sveltia-cms-auth to
+# Cloudflare Workers and add its URL as `base_url:` under backend. See the
+# README, "Letting other people upload".
+
+backend:
+  name: github
+  repo: OWNER/REPO-NAME # TODO: your GitHub repo
+  branch: main
+
+site_url: https://example.com # TODO: match hugo.toml baseURL
+
+collections:
+  - name: gallery
+    label: Gallery
+    files:
+      - label: Photos
+        name: photos
+        file: content/_index.md
+        # Empty means "next to the file", which is where gallery.html
+        # looks for each photo.
+        media_folder: ''
+        public_folder: ''
+        fields:
+          - { label: Site title, name: title, widget: string }
+          - { label: Description, name: description, widget: text }
+          # The CMS only writes fields it knows about, so an unlisted
+          # front-matter key is dropped on the first save. Keep date here.
+          - { label: Date, name: date, widget: datetime }
+          - label: Photos
+            name: photos
+            widget: list
+            add_to_top: true
+            label_singular: photo
+            summary: '{{fields.caption}} {{fields.alt}}'
+            hint: >-
+              New photos go to the top. Drag to reorder. Alt text is
+              required: it is what screen readers and search engines see.
+            fields:
+              - { label: Photo, name: image, widget: image }
+              - label: Alt text
+                name: alt
+                widget: string
+                hint: Describe what is in the photo, one sentence.
+              - { label: Caption, name: caption, widget: string, required: false }
+          - { label: Intro text, name: body, widget: markdown, required: false }
+
+  - name: pages
+    label: Pages
+    files:
+      - label: About
+        name: about
+        file: content/about.md
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Description, name: description, widget: text }
+          - { label: Date, name: date, widget: datetime }
+          - { label: Layout, name: layout, widget: hidden, default: about }
+          - { label: Body, name: body, widget: markdown }

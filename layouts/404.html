@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="{{ site.Language.Locale | default "en" }}">
+<head>
+    {{ partial "head.html" . }}
+    {{/* Keep the error page out of the index. Without this a crawler that
+         reaches /404.html treats it as an ordinary page and can rank it. */}}
+    <meta name="robots" content="noindex, follow">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    {{ partial "nav.html" . }}
+    <main id="main-content">
+        <section class="not-found">
+            <div class="container">
+                <p class="not-found-code" aria-hidden="true">404</p>
+                <p class="not-found-kana" lang="ja" aria-hidden="true">このノードはありません</p>
+                <h1 class="not-found-title">Signal lost</h1>
+                <p class="not-found-text">There's no node at this address. The page never existed, or it has gone dark.</p>
+                <a href="/" class="btn btn-primary">&larr; Back to the grid</a>
+            </div>
+        </section>
+    </main>
+    {{ partial "footer.html" . }}
+
+    {{ with .Site.Params.googleAnalytics }}{{ partial "consent-banner.html" $ }}{{ end }}
+
+    <script src="/js/scripts.js"></script>
+</body>
+</html>
