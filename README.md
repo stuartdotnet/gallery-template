@@ -1,7 +1,7 @@
 # gallery-template
 
 A free, fast, public photo gallery you can have online in about ten minutes.
-Hugo static site, a neon "Neon Sprawl" design, a mosaic grid with a
+Hugo static site, a clean neutral design that lets the photos do the talking, a mosaic grid with a
 keyboard-friendly lightbox, light and dark themes, and a browser-based
 upload screen so you (or anyone you invite) can add photos without touching
 code. No database, no server, no JavaScript framework, no monthly bill.
@@ -19,15 +19,16 @@ cd my-gallery
 hugo server -D
 ```
 
-Open <http://localhost:1313>. You'll see six placeholder images.
+Open <http://localhost:1313>. You'll see twelve sample photos (landscapes,
+people and still life, all from Unsplash; credits below).
 
 ## Make it yours
 
 1. **`hugo.toml`**: set `title`, `baseURL`, `description`, `tagline`, `author`,
    and the two-letter `navCode` for the nav badge. Delete any social links you
    don't use.
-2. **Delete the samples**: remove `content/sample-*.jpg` and the matching
-   entries in `content/_index.md`.
+2. **Delete the samples**: remove the sample `.jpg` files from `content/`
+   and the matching entries in `content/_index.md`.
 3. **Add your photos** (below).
 4. **`content/about.md`**: say who you are and what people may do with the photos.
 5. **Re-theme** (optional): every colour and font is a custom property at the
@@ -44,7 +45,7 @@ front matter of `content/_index.md`:
 ```yaml
 photos:
   - image: "shibuya-crossing.jpg"
-    alt: "Shibuya crossing at night, neon signs reflected on wet pavement"
+    alt: "Shibuya crossing at night, signs reflected on wet pavement"
     caption: "Shibuya, Tokyo"
 ```
 
@@ -121,9 +122,11 @@ Then set `baseURL` in `hugo.toml` to your real address.
   The first build of a big gallery is the slow one.
 - **Analytics** are off by default. Put a GA4 ID in `params.googleAnalytics`
   and a consent banner appears automatically.
-- **Fonts** are self-hosted in `static/fonts/` (DotGothic16 and Zen Kaku
-  Gothic New, both SIL OFL). The pixel face has the full kana blocks but no
-  kanji, so stick to Latin and kana in the site furniture.
+- **Fonts**: one family, [Inter](https://rsms.me/inter/) (SIL OFL), self-hosted
+  in `static/fonts/` as a variable font covering Latin and Latin Extended. To
+  swap it, change `--font-sans` at the top of `styles.css`.
+- **Themes**: light and dark, following the visitor's system setting until
+  they pick one with the toggle. The lightbox is always dark.
 
 ## Layout
 
@@ -137,7 +140,27 @@ static/contenteditor/    the upload screen
 hugo.toml                site settings
 ```
 
+## Sample photo credits
+
+The sample photos are from [Unsplash](https://unsplash.com/license) (free to
+use, no permission needed) via [Lorem Picsum](https://picsum.photos):
+
+| File | Photographer |
+| --- | --- |
+| `alpine-peak.jpg` | [Paul E. Harrer](https://unsplash.com/photos/TI-B-TNYJMU) |
+| `hiker.jpg` | [Danka & Peter](https://unsplash.com/photos/tvicgTdh7Fg) |
+| `bench-for-two.jpg` | [Charlie Foster](https://unsplash.com/photos/A88emaZe7d8) |
+| `blossom.jpg` | [Rula Sibai](https://unsplash.com/photos/-vq7mi4oF0s) |
+| `twin-lens-camera.jpg` | [Jennifer Trovato](https://unsplash.com/photos/baRYCsjO6z4) |
+| `forks.jpg` | [Alejandro Escamilla](https://unsplash.com/photos/8yqds_91OLw) |
+| `mountain-ridge.jpg` | [Go Wild](https://unsplash.com/photos/V0yAek6BgGk) |
+| `daisies.jpg` | [Alexander Shustov](https://unsplash.com/photos/AHBiSKaENwc) |
+| `sea-cliffs.jpg` | [Monika Majkowska](https://unsplash.com/photos/Nq8LdWC7HnM) |
+| `dandelion.jpg` | [Coley Christine](https://unsplash.com/photos/GyvMk5pPDXI) |
+| `birds-in-flight.jpg` | [Fré Sonneveld](https://unsplash.com/photos/liiqOto_Dw8) |
+| `field-at-sunset.jpg` | [Kenneth Thewissen](https://unsplash.com/photos/D76DklsG-5U) |
+
 ## Licence
 
-MIT. Use it, change it, sell it, no attribution needed. The bundled fonts keep
-their own SIL Open Font Licence.
+MIT. Use it, change it, sell it, no attribution needed. The bundled font keeps
+its own SIL Open Font Licence.

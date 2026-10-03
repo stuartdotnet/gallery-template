@@ -31,7 +31,6 @@
             <button type="button" class="gallery-thumb" data-full="{{ $full.RelPermalink }}" data-alt="{{ $meta.alt }}" data-caption="{{ with $meta.caption }}{{ . }}{{ end }}" data-w="{{ $full.Width }}" data-h="{{ $full.Height }}">
                 <img src="{{ $tile.RelPermalink }}" alt="{{ $meta.alt }}" loading="lazy" decoding="async" width="{{ $tile.Width }}" height="{{ $tile.Height }}">
                 <span class="gallery-overlay" aria-hidden="true">
-                    <span class="gallery-overlay-icon">＋</span>
                     <span class="gallery-overlay-text">{{ with $meta.caption }}{{ . }}{{ else }}{{ $meta.alt }}{{ end }}</span>
                 </span>
             </button>
@@ -44,7 +43,7 @@
 </div>
 {{ else }}
 <div class="container">
-    <p class="gallery-empty">The gallery's empty for now. Photos are on their way.</p>
+    <p class="gallery-empty">No photos yet. Add some to content/_index.md, or upload them at /contenteditor/.</p>
 </div>
 {{ end }}
 

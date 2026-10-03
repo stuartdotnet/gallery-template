@@ -23,7 +23,7 @@ disableKinds = ['taxonomy', 'term']
   description = 'A public photo gallery. Replace this with one honest sentence about whose photos these are.'
   tagline = 'Photos from travels, streets and shelves.'
   author = 'Your Name'
-  # Two letters shown in the little neon tag beside the site name in the nav.
+  # Two letters shown in the small monogram beside the site name in the nav.
   navCode = 'MG'
   # Used for og:locale on share cards, e.g. en_GB or en_AU.
   ogLocale = 'en_US'

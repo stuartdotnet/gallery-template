@@ -1,112 +1,81 @@
 /* ==========================================================================
-   gallery-template — "Neon Sprawl"
-   Neo-Tokyo street level: wet asphalt, neon tubes, and a photo grid that
-   keeps the glow on the frame and off the photograph.
+   gallery-template
+   A quiet frame for photographs: neutral greys, one typeface, one accent.
+   The photos carry the colour; the site stays out of their way.
 
-   Three type roles. A pixel face (DotGothic16) carries both the largest
-   type and the smallest — hero, section titles, tags, readouts — because
-   that is where signage energy lives. A signage grotesk (Zen Kaku Gothic
-   New) does the mid-size legible work: article titles, card names,
-   buttons. The system stack carries long-form prose, which no pixel face
-   should ever be asked to do.
+   One family, Inter, does everything. Hierarchy comes from size, weight and
+   tracking rather than from a second face, so the site suits any kind of
+   photography without arguing with it.
 
    Every colour in the file resolves from the :root block below. Nothing
    past it hardcodes a value, including the translucent washes, which use
    color-mix() against a token. Swap the tokens and the site re-themes.
    ========================================================================== */
 
+/* Inter (SIL OFL), variable weight 100–900. Latin and Latin Extended ship as
+   separate subsets so most pages only download the first. */
 @font-face {
-    font-family: 'Zen Kaku Gothic New';
+    font-family: 'Inter';
     font-style: normal;
-    font-weight: 700;
+    font-weight: 100 900;
     font-display: swap;
-    src: url('/fonts/zenkaku-700.woff2') format('woff2');
+    src: url('/fonts/inter-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-    font-family: 'Zen Kaku Gothic New';
+    font-family: 'Inter';
     font-style: normal;
-    font-weight: 900;
+    font-weight: 100 900;
     font-display: swap;
-    src: url('/fonts/zenkaku-900.woff2') format('woff2');
+    src: url('/fonts/inter-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-/* Latin and kana ship as separate subsets so the JP glyphs never block Latin
-   text. The kana file carries the full katakana and hiragana blocks, so new
-   furniture can use any kana without re-subsetting. It carries no kanji, so
-   new furniture must not use any. */
-@font-face {
-    font-family: 'DotGothic16';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url('/fonts/dotgothic-latin.woff2') format('woff2');
-    unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2026, U+2190-2199, U+25B2-25CF;
-}
-@font-face {
-    font-family: 'DotGothic16';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url('/fonts/dotgothic-kana.woff2') format('woff2');
-    unicode-range: U+3000-30FF, U+4E00-9FFF, U+FF00-FFEF;
-}
+
 :root {
-    /* Palette — wet asphalt and neon tube.
-       Every pairing here clears WCAG AA against --void or --panel. */
-    --void:     #060309;
-    --panel:    #140A1E;
-    --panel-2:  #1D1030;
-    --edge:     #322046;
-    --sign:     #F4EEFF;
-    --muted:    #A897C7;
+    /* Palette. Neutral greys with no warm or cool cast, so they never tint
+       how a photo reads. Text pairings clear WCAG AA against --bg and
+       --surface. */
+    --bg:       #FAFAF9;
+    --surface:  #FFFFFF;
+    --surface-2:#F0F0EE;
+    --rule:     #E2E2DF;
+    --ink:      #161616;
+    --muted:    #5F5F5C;
+    --accent:   #2F55D4;
 
-    /* The three tubes. --accent is the site's own; nodes override
-       --node-color per element from hugo.toml. */
-    --magenta:  #FF2E88;
-    --cyan:     #00F0FF;
-    --lime:     #C6FF00;
-    --accent:   var(--magenta);
+    /* The lightbox and photo captions sit on photographs, not on the page,
+       so they stay dark in both themes. */
+    --stage:    #0C0C0C;
+    --on-stage: #F2F2F2;
 
-    /* Type roles */
-    --font-pixel: 'DotGothic16', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', Meiryo, 'Noto Sans CJK JP', monospace;
-    --font-sign: 'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', Meiryo, 'Noto Sans CJK JP', sans-serif;
-    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
-    --container-w: 1080px;
-    --container-narrow-w: 700px;
     --wide-w: 1800px;
+    /* Page furniture lines up with the gallery's outer edge. */
+    --container-w: var(--wide-w);
+    --container-narrow-w: 680px;
+    --gutter: clamp(1rem, 3vw, 2rem);
 
-    --radius: 3px;
-    --radius-panel: 8px;
+    --radius: 6px;
+    --radius-photo: 3px;
 
-    /* Depth shadow behind panels that sit above the page (hero board, the
-       consent notice) — separate from --void so it stays dark in both themes
-       instead of vanishing when --void turns pale in light mode. */
-    --shadow-ink: rgba(0, 0, 0, 0.6);
+    --shadow-ink: rgba(0, 0, 0, 0.12);
 
-    color-scheme: dark;
+    color-scheme: light;
 }
 
-/* --------------------------------------------------------------------------
-   Light theme — same signage, daylight concrete instead of wet asphalt.
-   The neon triad darkens here so it still reads as text and glow against a
-   pale ground; decorative uses (borders, rings, trace lines) stay on the
-   dark-tuned hex values below since those never carry text.
-   -------------------------------------------------------------------------- */
+[data-theme="dark"] {
+    color-scheme: dark;
+    --bg:       #121212;
+    --surface:  #1A1A1A;
+    --surface-2:#222222;
+    --rule:     #2C2C2C;
+    --ink:      #EDEDEB;
+    --muted:    #A3A3A0;
+    --accent:   #8FA8FF;
 
-[data-theme="light"] {
-    color-scheme: light;
-    --void:     #F3EFE7;
-    --panel:    #FFFFFF;
-    --panel-2:  #EEE7DB;
-    --edge:     #DBD1C0;
-    --sign:     #1C1420;
-    --muted:    #6B6078;
-
-    --magenta:  #C81760;
-    --cyan:     #0089A6;
-    --lime:     #5C8A00;
-
-    --shadow-ink: rgba(40, 28, 15, 0.16);
+    --shadow-ink: rgba(0, 0, 0, 0.5);
 }
 
 
@@ -120,11 +89,12 @@
 }
 body {
     margin: 0;
-    background: var(--void);
-    color: var(--sign);
-    font-family: var(--font-body);
-    font-size: 18px;
-    line-height: 1.65;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.6;
+    font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
     transition: background-color 0.2s ease, color 0.2s ease;
 }
@@ -133,10 +103,10 @@ a { color: inherit; text-decoration: none; }
 ul, ol { padding: 0; margin: 0; list-style: none; }
 h1, h2, h3, h4, p, figure { margin: 0; }
 button { font: inherit; cursor: pointer; }
-::selection { background: var(--accent); color: var(--void); }
+::selection { background: var(--accent); color: var(--bg); }
 
 :focus-visible {
-    outline: 2px solid var(--cyan);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
     border-radius: 2px;
 }
@@ -145,11 +115,11 @@ button { font: inherit; cursor: pointer; }
     position: absolute;
     left: -9999px;
     top: 0;
-    background: var(--accent);
-    color: var(--void);
+    background: var(--ink);
+    color: var(--bg);
     padding: 0.75rem 1.25rem;
     z-index: 1000;
-    font-weight: 700;
+    font-weight: 600;
     border-radius: var(--radius);
 }
 .skip-link:focus { left: 1rem; top: 1rem; }
@@ -160,38 +130,15 @@ button { font: inherit; cursor: pointer; }
     clip: rect(0,0,0,0); white-space: nowrap; border: 0;
 }
 
-.container { max-width: var(--container-w); margin: 0 auto; padding: 0 1.5rem; }
-.container-narrow { max-width: var(--container-narrow-w); margin: 0 auto; padding: 0 1.5rem; }
+.container { max-width: var(--container-w); margin: 0 auto; padding: 0 var(--gutter); }
+.container-narrow { max-width: var(--container-narrow-w); margin: 0 auto; padding: 0 var(--gutter); }
 
 /* Scroll-reveal — see scripts.js. baseof.html ships a <noscript> override
    so this never leaves content invisible when JS is disabled. */
-[data-observe] { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
+[data-observe] { opacity: 0; transform: translateY(12px); transition: opacity 0.6s ease, transform 0.6s ease; }
 [data-observe].is-visible { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
     [data-observe] { opacity: 1; transform: none; transition: none; }
-}
-
-/* --------------------------------------------------------------------------
-   Screens
-
-   CRT texture is reserved for the two elements that are diegetically screens:
-   the hero board and the signal feed. Applying it site-wide would lay
-   scanlines over the photography, which is the one place on the site that
-   must stay clean.
-   -------------------------------------------------------------------------- */
-
-.screen { position: relative; }
-.screen::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
-    border-radius: inherit;
-    background: repeating-linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--sign) 4%, transparent) 0 1px,
-        transparent 1px 3px);
 }
 
 /* --------------------------------------------------------------------------
@@ -202,56 +149,17 @@ button { font: inherit; cursor: pointer; }
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.7rem 1.4rem;
-    font-family: var(--font-pixel);
+    padding: 0.65rem 1.25rem;
     font-size: 0.95rem;
-    letter-spacing: 0.05em;
-    border-radius: var(--radius);
+    font-weight: 500;
+    border-radius: 999px;
     border: 1px solid transparent;
-    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-.btn-primary {
-    background: var(--accent);
-    color: var(--void);
-    box-shadow: 0 0 16px -2px color-mix(in srgb, var(--accent) 60%, transparent);
-}
-.btn-primary:hover {
-    background: var(--cyan);
-    box-shadow: 0 0 20px -2px color-mix(in srgb, var(--cyan) 65%, transparent);
-}
-.btn-secondary { background: transparent; color: var(--sign); border-color: var(--edge); }
-.btn-secondary:hover {
-    border-color: var(--cyan);
-    color: var(--cyan);
-    box-shadow: 0 0 14px -4px color-mix(in srgb, var(--cyan) 55%, transparent);
-}
-
-/* --------------------------------------------------------------------------
-   Node tag — the grid's route mark. The ring takes the node colour via
-   --node-color; the code stays sign-white. Used in the nav, the directory
-   and the signal feed.
-   -------------------------------------------------------------------------- */
-
-.node-tag {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 38px;
-    height: 38px;
-    border: 2px solid var(--node-color, var(--accent));
-    border-radius: var(--radius);
-    font-family: var(--font-pixel);
-    font-size: 0.8rem;
-    letter-spacing: 0.03em;
-    color: var(--sign);
-    background: var(--void);
-    box-shadow:
-        0 0 10px -2px color-mix(in srgb, var(--node-color, var(--accent)) 70%, transparent),
-        inset 0 0 10px -4px color-mix(in srgb, var(--node-color, var(--accent)) 60%, transparent);
-}
-.node-tag--sm { width: 28px; height: 28px; font-size: 0.65rem; }
-.node-tag--nav { width: 30px; height: 30px; font-size: 0.7rem; }
+.btn-primary { background: var(--ink); color: var(--bg); }
+.btn-primary:hover { background: var(--accent); }
+.btn-secondary { background: transparent; color: var(--ink); border-color: var(--rule); }
+.btn-secondary:hover { border-color: var(--ink); }
 
 /* --------------------------------------------------------------------------
    Navigation
@@ -261,73 +169,77 @@ button { font: inherit; cursor: pointer; }
     position: sticky;
     top: 0;
     z-index: 100;
-    background: color-mix(in srgb, var(--void) 88%, transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--edge);
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
 }
 .nav-container {
-    max-width: var(--container-w);
+    max-width: var(--wide-w);
     margin: 0 auto;
-    padding: 0.8rem 1.5rem;
+    padding: 0.85rem var(--gutter);
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 1rem;
 }
 .nav-logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    font-family: var(--font-sign);
+    gap: 0.65rem;
+    margin-right: auto;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+}
+/* The monogram from params.navCode: a small dark print in the nav. */
+.nav-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius);
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 0.68rem;
     font-weight: 700;
-    font-size: 1.05rem;
+    letter-spacing: 0.02em;
 }
-.nav-links { display: flex; align-items: center; gap: 1.6rem; }
+.nav-links { display: flex; align-items: center; gap: 1.75rem; }
 .nav-links a {
-    font-family: var(--font-pixel);
-    font-size: 0.95rem;
-    letter-spacing: 0.06em;
+    font-size: 0.92rem;
+    font-weight: 500;
     color: var(--muted);
-    padding: 0.2rem 0;
-    border-bottom: 2px solid transparent;
-    transition: color 0.15s ease, border-color 0.15s ease, text-shadow 0.15s ease;
+    transition: color 0.15s ease;
 }
-.nav-links a:hover {
-    color: var(--cyan);
-    border-color: var(--cyan);
-    text-shadow: 0 0 12px color-mix(in srgb, var(--cyan) 70%, transparent);
-}
+.nav-links a:hover { color: var(--ink); }
 .theme-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     background: none;
-    border: 1px solid var(--edge);
-    border-radius: var(--radius);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
     color: var(--muted);
     width: 34px;
     height: 34px;
     flex-shrink: 0;
-    transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    margin-left: 0.5rem;
+    transition: color 0.15s ease, border-color 0.15s ease;
 }
-.theme-toggle:hover {
-    color: var(--cyan);
-    border-color: var(--cyan);
-    box-shadow: 0 0 14px -4px color-mix(in srgb, var(--cyan) 70%, transparent);
-}
-/* Default (dark): show the sun as the affordance to switch to light. */
-.theme-toggle .icon-moon { display: none; }
-.theme-toggle .icon-sun  { display: block; }
-[data-theme="light"] .theme-toggle .icon-moon { display: block; }
-[data-theme="light"] .theme-toggle .icon-sun  { display: none; }
+.theme-toggle:hover { color: var(--ink); border-color: var(--ink); }
+/* Show the icon for the theme you would switch to. */
+.theme-toggle .icon-moon { display: block; }
+.theme-toggle .icon-sun  { display: none; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun  { display: block; }
 
 .nav-mobile-toggle {
     display: none;
     background: none;
-    border: 1px solid var(--edge);
+    border: 1px solid var(--rule);
     border-radius: var(--radius);
-    color: var(--sign);
+    color: var(--ink);
     padding: 0.45rem 0.55rem;
     line-height: 0;
 }
@@ -346,269 +258,94 @@ button { font: inherit; cursor: pointer; }
         flex-direction: column;
         align-items: stretch;
         gap: 0;
-        background: var(--panel);
-        border-bottom: 1px solid var(--edge);
+        background: var(--surface);
+        border-bottom: 1px solid var(--rule);
         padding: 0.5rem 0;
     }
     .nav-links.nav--open { display: flex; }
-    .nav-links a { padding: 0.85rem 1.5rem; border-bottom: none; }
-    .nav-links a:hover { background: var(--panel-2); }
+    .nav-links a { padding: 0.85rem var(--gutter); }
+    .nav-links a:hover { background: var(--surface-2); }
 }
 
 /* --------------------------------------------------------------------------
-   Hero — the neon board
+   Hero — the title, set large, and the photo count on the same baseline.
+   No imagery here: the first thing under it is the work.
    -------------------------------------------------------------------------- */
 
-.hero {
-    position: relative;
-    padding: clamp(4rem, 10vh, 7rem) 0 3.5rem;
-    overflow: hidden;
-    text-align: center;
-}
-/* Wet asphalt: two neon pools bleeding into the road, over a faint grid.
-   No imagery, so it costs nothing to load. */
-.hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-        radial-gradient(680px 340px at 8% -10%, color-mix(in srgb, var(--magenta) 16%, transparent), transparent 70%),
-        radial-gradient(680px 340px at 92% 110%, color-mix(in srgb, var(--cyan) 13%, transparent), transparent 70%),
-        repeating-linear-gradient(90deg, color-mix(in srgb, var(--edge) 40%, transparent) 0 1px, transparent 1px 64px),
-        repeating-linear-gradient(180deg, color-mix(in srgb, var(--edge) 40%, transparent) 0 1px, transparent 1px 64px);
-}
-.hero .container { position: relative; z-index: 1; }
-
-.hero-board {
-    background: var(--panel);
-    border: 1px solid var(--edge);
-    border-radius: var(--radius-panel);
-    padding: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 3rem) 0;
-    max-width: 820px;
-    margin: 0 auto;
-    box-shadow:
-        0 24px 70px -30px var(--shadow-ink),
-        0 0 40px -20px color-mix(in srgb, var(--magenta) 50%, transparent);
-}
-/* The tube. Layered text-shadow is what separates lit neon from coloured
-   text: a tight core, a mid bloom, and a wide haze. */
-.hero-title {
-    font-family: var(--font-pixel);
-    /* DotGothic16 sets katakana full-width, so this string is a fixed ~11.7em
-       wide. The ceiling is what keeps it on one line inside the 820px board;
-       past 3.8rem it wraps. */
-    font-size: clamp(2rem, 6.2vw, 3.8rem);
-    line-height: 1.2;
-    letter-spacing: 0.06em;
-    margin: 0 0 1.4rem;
-    color: var(--sign);
-    text-shadow:
-        0 0 5px color-mix(in srgb, var(--magenta) 80%, transparent),
-        0 0 20px color-mix(in srgb, var(--magenta) 50%, transparent),
-        0 0 52px color-mix(in srgb, var(--magenta) 28%, transparent);
-}
-/* Flex, so the two name parts wrap as whole units and never mid-word.
-   An inline-block pair plus <wbr> looks equivalent but is not: Chromium
-   gives no break opportunity between two atomic inline boxes, so the name
-   overflowed the board on a phone. Flex items wrap by definition.
-   .sr-only is position:absolute, so it stays out of this flow. */
-.hero-title {
+.hero { padding: clamp(3.5rem, 9vh, 6.5rem) 0 clamp(2rem, 5vh, 3rem); }
+.hero-inner {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-/* The spectrum bar: every live node's neon, side by side. */
-.hero-spectrum {
-    display: flex;
-    gap: 4px;
-    height: 5px;
-}
-.hero-spectrum span {
-    flex: 1;
-    background: var(--node-color, var(--edge));
-    box-shadow: 0 0 10px -1px color-mix(in srgb, var(--node-color, var(--edge)) 80%, transparent);
-}
-.hero-adjacent {
-    display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
-    gap: 1rem;
-    border-top: 1px solid var(--edge);
-    margin-top: 1.4rem;
-    padding: 0.9rem 0 1rem;
+    gap: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
 }
-.hero-adj {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    color: var(--muted);
-    transition: color 0.15s ease;
-}
-.hero-adj:hover { color: var(--cyan); }
-.hero-adj-arrow { color: var(--accent); font-size: 0.8rem; }
-.hero-adj:hover .hero-adj-arrow { color: var(--cyan); }
-.hero-adj-body { display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
-.hero-adj--next .hero-adj-body { align-items: flex-end; text-align: right; }
-.hero-adj-caption { font-family: var(--font-pixel); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; }
-.hero-adj-name { font-family: var(--font-sign); font-weight: 700; font-size: 1rem; line-height: 1.2; }
-.hero-roles {
-    font-family: var(--font-pixel);
-    font-size: 0.9rem;
-    letter-spacing: 0.08em;
-    color: var(--muted);
-}
-@media (max-width: 640px) {
-    .hero-adjacent { flex-wrap: wrap; }
-    .hero-roles {
-        order: 3;
-        flex-basis: 100%;
-        text-align: center;
-        border-top: 1px solid var(--edge);
-        margin-top: 0.35rem;
-        padding-top: 0.9rem;
-    }
+.hero-title {
+    font-size: clamp(2.6rem, 7.5vw, 5.75rem);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
 }
 .hero-description {
-    max-width: 520px;
-    margin: 2rem auto 0;
+    max-width: 34rem;
+    margin-top: 1.1rem;
     color: var(--muted);
-    font-size: 1.15rem;
-    line-height: 1.6;
+    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+    line-height: 1.5;
+    letter-spacing: -0.01em;
 }
-.hero-down {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 2rem;
-    font-family: var(--font-pixel);
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    color: var(--cyan);
-    text-shadow: 0 0 14px color-mix(in srgb, var(--cyan) 55%, transparent);
+.hero-count {
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
 }
-.hero-down:hover { color: var(--sign); }
-
-/* Power-on sequence: the board settles, the tube strikes once with a hard
-   RGB split, then holds steady. It fires once and never loops, so it reads
-   as neon coming on instead of a fault. */
+@media (max-width: 640px) {
+    .hero-inner { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+}
 @media (prefers-reduced-motion: no-preference) {
-    .hero-board { animation: board-in 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) both; }
-    .hero-title { animation: tube-strike 1.1s steps(1, end) both; animation-delay: 0.3s; }
-    .hero-spectrum span {
-        transform-origin: left center;
-        animation: trace-draw 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) both;
-    }
-    .hero-spectrum span:nth-child(1) { animation-delay: 0.90s; }
-    .hero-spectrum span:nth-child(2) { animation-delay: 0.96s; }
-    .hero-spectrum span:nth-child(3) { animation-delay: 1.02s; }
-    .hero-spectrum span:nth-child(4) { animation-delay: 1.08s; }
-    .hero-spectrum span:nth-child(5) { animation-delay: 1.14s; }
-    .hero-spectrum span:nth-child(6) { animation-delay: 1.20s; }
-    .hero-spectrum span:nth-child(7) { animation-delay: 1.26s; }
-    .hero-spectrum span:nth-child(8) { animation-delay: 1.32s; }
-    .hero-adjacent, .hero-description, .hero-down { animation: sign-in 0.5s ease both 1.3s; }
+    .hero-text, .hero-count { animation: rise-in 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+    .hero-count { animation-delay: 0.15s; }
 }
-@keyframes board-in {
-    from { opacity: 0; transform: translateY(18px); }
+@keyframes rise-in {
+    from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: none; }
-}
-@keyframes sign-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-@keyframes trace-draw {
-    from { transform: scaleX(0); }
-    to   { transform: scaleX(1); }
-}
-@keyframes tube-strike {
-    0%   { opacity: 0; text-shadow: none; }
-    14%  { opacity: 1; text-shadow: -3px 0 var(--cyan), 3px 0 var(--magenta); }
-    22%  { opacity: 0.25; text-shadow: none; }
-    36%  { opacity: 1; text-shadow: 2px 0 var(--magenta), -2px 0 var(--cyan); }
-    46%  { opacity: 0.5; text-shadow: none; }
-    58%  { opacity: 1; text-shadow: -1px 0 var(--cyan), 1px 0 var(--magenta); }
-    100% {
-        opacity: 1;
-        text-shadow:
-            0 0 5px color-mix(in srgb, var(--magenta) 80%, transparent),
-            0 0 20px color-mix(in srgb, var(--magenta) 50%, transparent),
-            0 0 52px color-mix(in srgb, var(--magenta) 28%, transparent);
-    }
 }
 
 /* --------------------------------------------------------------------------
-   Section furniture
+   Static pages
    -------------------------------------------------------------------------- */
 
-.hero + section { padding-top: 1rem; }
-.home-section { padding: 4.5rem 0; }
-
-.section-header { margin-bottom: 2.2rem; max-width: 640px; }
-.section-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55em;
-    font-family: var(--font-pixel);
-    font-size: 0.9rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--cyan);
-    text-shadow: 0 0 14px color-mix(in srgb, var(--cyan) 45%, transparent);
-}
-.section-eyebrow [lang="ja"] { color: var(--muted); letter-spacing: 0.2em; text-shadow: none; }
-.section-eyebrow::before {
-    content: "";
-    width: 14px;
-    height: 2px;
-    background: var(--cyan);
-    box-shadow: 0 0 8px var(--cyan);
-}
-.section-title {
-    font-family: var(--font-pixel);
-    font-size: clamp(1.6rem, 4vw, 2.2rem);
-    line-height: 1.25;
-    letter-spacing: 0.02em;
-    margin-top: 0.6rem;
-}
-.section-description { color: var(--muted); margin-top: 0.7rem; }
-
-.page-hero { padding: 4rem 0 1rem; }
+.page-hero { padding: clamp(3rem, 8vh, 5rem) 0 1.5rem; }
 .page-title {
-    font-family: var(--font-pixel);
-    font-size: clamp(2rem, 5.5vw, 3rem);
-    line-height: 1.2;
-    letter-spacing: 0.02em;
-    margin-top: 0.6rem;
-    text-shadow:
-        0 0 6px color-mix(in srgb, var(--magenta) 55%, transparent),
-        0 0 26px color-mix(in srgb, var(--magenta) 30%, transparent);
+    font-size: clamp(2.2rem, 5.5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-top: 1rem;
 }
-.page-description { color: var(--muted); margin-top: 0.7rem; max-width: 620px; }
 .page-back { margin-top: 3rem; }
-
 
 /* --------------------------------------------------------------------------
    Photography gallery
-
-   The one section with no neon on the artwork itself. Glow lives on the
-   frame and the overlay, never over the photograph.
    -------------------------------------------------------------------------- */
 
-.gallery-intro { color: var(--muted); max-width: 640px; margin-bottom: 2.2rem; }
+.gallery-section { padding-bottom: 4rem; }
+.gallery-intro { color: var(--muted); max-width: 640px; margin-bottom: 2rem; }
 .gallery-intro > * + * { margin-top: 1em; }
-.gallery-empty { color: var(--muted); font-family: var(--font-pixel); font-size: 0.9rem; letter-spacing: 0.04em; }
+.gallery-intro code { font-family: var(--font-mono); font-size: 0.88em; }
+.gallery-empty { color: var(--muted); }
 
-/* The mosaic breaks out well past the site's normal 1080px column — the
-   gallery is the one place on the site meant to fill the screen. The page
-   title/intro/back-link stay in the standard .container so their left edge
-   lines up with the nav logo above them; only the grid itself breaks out. */
-.gallery-wide { max-width: var(--wide-w); margin: 2.2rem auto 0; padding: 0 1.5rem; }
+/* The mosaic breaks out past the reading column — the gallery is the one
+   place on the site meant to fill the screen. */
+.gallery-wide { max-width: var(--wide-w); margin: 0 auto; padding: 0 var(--gutter); }
 
-/* Past 1800px the grid was capped and floating in a sea of margin on
-   ultrawide monitors. Let it keep growing, and add two more columns so
-   individual tiles don't stretch into odd proportions as it does. */
+/* Past 1800px the grid would float in a sea of margin on ultrawide
+   monitors. Let it keep growing, and add two columns so tiles keep sane
+   proportions as it does. */
 @media (min-width: 2100px) {
     :root { --wide-w: min(94vw, 2800px); }
     .gallery-grid { grid-template-columns: repeat(8, 1fr); }
@@ -619,7 +356,7 @@ button { font: inherit; cursor: pointer; }
     grid-template-columns: repeat(6, 1fr);
     grid-auto-rows: clamp(90px, 11vw, 170px);
     grid-auto-flow: dense;
-    gap: 0.6rem;
+    gap: clamp(0.4rem, 0.8vw, 0.75rem);
 }
 .gallery-item {
     grid-column: span 2;
@@ -641,59 +378,40 @@ button { font: inherit; cursor: pointer; }
     width: 100%;
     height: 100%;
     padding: 0;
-    background: var(--panel);
-    border: 1px solid var(--edge);
-    border-radius: var(--radius-panel);
+    background: var(--surface-2);
+    border: none;
+    border-radius: var(--radius-photo);
     overflow: hidden;
     cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .gallery-thumb img {
     width: 100%;
     height: 100%;
     display: block;
     object-fit: cover;
-    transition: transform 0.4s ease;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
-.gallery-thumb:hover, .gallery-thumb:focus-visible {
-    border-color: var(--cyan);
-    box-shadow: 0 0 24px -8px color-mix(in srgb, var(--cyan) 75%, transparent);
-}
-.gallery-thumb:hover img, .gallery-thumb:focus-visible img { transform: scale(1.06); }
+.gallery-thumb:hover img, .gallery-thumb:focus-visible img { transform: scale(1.03); }
+.gallery-thumb:focus-visible { outline-offset: 3px; }
 
 .gallery-overlay {
     position: absolute;
     inset: 0;
     display: flex;
     align-items: flex-end;
-    padding: 1rem;
+    padding: 1rem 1.1rem;
     background: linear-gradient(180deg,
         transparent 55%,
-        color-mix(in srgb, var(--void) 88%, transparent) 100%);
+        color-mix(in srgb, var(--stage) 70%, transparent) 100%);
     opacity: 0;
     transition: opacity 0.25s ease;
 }
 .gallery-thumb:hover .gallery-overlay, .gallery-thumb:focus-visible .gallery-overlay { opacity: 1; }
-.gallery-overlay-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    margin-right: 0.6rem;
-    flex-shrink: 0;
-    border: 1px solid var(--cyan);
-    border-radius: 50%;
-    color: var(--cyan);
-    font-size: 1rem;
-    line-height: 1;
-    box-shadow: 0 0 12px -3px var(--cyan);
-}
 .gallery-overlay-text {
-    font-family: var(--font-pixel);
-    font-size: 0.8rem;
-    letter-spacing: 0.03em;
-    color: var(--sign);
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--on-stage);
     text-align: left;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -702,11 +420,13 @@ button { font: inherit; cursor: pointer; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .gallery-thumb, .gallery-thumb img, .gallery-overlay { transition: none; }
+    .gallery-thumb img, .gallery-overlay { transition: none; }
+    .gallery-thumb:hover img, .gallery-thumb:focus-visible img { transform: none; }
 }
 
 /* Lightbox — a native <dialog>, centred and sized by hand rather than relying
-   on the browser's default UA centring, which varies across engines. */
+   on the browser's default UA centring, which varies across engines. Always
+   dark: a photograph reads best against near-black whatever the page theme. */
 dialog.lightbox {
     position: fixed;
     inset: 0;
@@ -718,41 +438,46 @@ dialog.lightbox {
     padding: 0;
     border: none;
     background: transparent;
-    color: var(--sign);
+    color: var(--on-stage);
 }
 dialog.lightbox[open] { display: flex; align-items: center; justify-content: center; }
-dialog.lightbox::backdrop { background: color-mix(in srgb, #060309 95%, transparent); }
+dialog.lightbox::backdrop { background: color-mix(in srgb, var(--stage) 96%, transparent); }
 .lightbox-figure {
     margin: 0;
     max-width: 92vw;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.7rem;
+    gap: 0.9rem;
 }
-.lightbox-img { max-width: 92vw; max-height: 78vh; width: auto; height: auto; border-radius: var(--radius); }
-.lightbox-caption { font-family: var(--font-pixel); font-size: 0.85rem; color: var(--muted); text-align: center; }
+.lightbox-img { max-width: 88vw; max-height: 80vh; width: auto; height: auto; border-radius: var(--radius-photo); }
+.lightbox-caption { font-size: 0.95rem; font-weight: 500; text-align: center; }
 .lightbox-caption:empty { display: none; }
-.lightbox-count { font-family: var(--font-pixel); font-size: 0.75rem; letter-spacing: 0.08em; color: var(--muted); text-align: center; margin: 0; }
+.lightbox-count {
+    font-size: 0.8rem;
+    color: color-mix(in srgb, var(--on-stage) 60%, transparent);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    margin: 0;
+}
 .lightbox-close, .lightbox-prev, .lightbox-next {
     position: fixed;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--panel);
-    border: 1px solid var(--edge);
-    border-radius: var(--radius);
-    color: var(--sign);
+    background: color-mix(in srgb, var(--on-stage) 8%, transparent);
+    border: none;
+    border-radius: 999px;
+    color: var(--on-stage);
     line-height: 1;
-    transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: background 0.15s ease;
 }
 .lightbox-close:hover, .lightbox-prev:hover, .lightbox-next:hover {
-    color: var(--cyan);
-    border-color: var(--cyan);
-    box-shadow: 0 0 16px -4px color-mix(in srgb, var(--cyan) 70%, transparent);
+    background: color-mix(in srgb, var(--on-stage) 18%, transparent);
 }
+.lightbox-close:focus-visible, .lightbox-prev:focus-visible, .lightbox-next:focus-visible { outline-color: var(--on-stage); }
 .lightbox-close { top: 1.2rem; right: 1.2rem; width: 44px; height: 44px; font-size: 1.6rem; }
-.lightbox-prev, .lightbox-next { top: 50%; transform: translateY(-50%); width: 48px; height: 48px; font-size: 1.7rem; }
+.lightbox-prev, .lightbox-next { top: 50%; transform: translateY(-50%); width: 48px; height: 48px; font-size: 1.8rem; padding-bottom: 0.15em; }
 .lightbox-prev { left: 1.2rem; }
 .lightbox-next { right: 1.2rem; }
 @media (max-width: 900px) {
@@ -762,155 +487,103 @@ dialog.lightbox::backdrop { background: color-mix(in srgb, #060309 95%, transpar
     .gallery-item.gi-portrait { grid-column: span 1; grid-row: span 3; }
 }
 @media (max-width: 640px) {
-    .gallery-wide { padding: 0 1rem; }
-    .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: clamp(150px, 42vw, 220px); gap: 0.5rem; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: clamp(150px, 42vw, 220px); }
     .gallery-item, .gallery-item.gi-big, .gallery-item.gi-tall, .gallery-item.gi-small { grid-column: span 1; grid-row: span 1; }
     .gallery-item.gi-portrait { grid-column: span 1; grid-row: span 2; }
-    .gallery-overlay {
-        opacity: 1;
-        padding: 0.7rem;
-        background: linear-gradient(180deg,
-            transparent 65%,
-            color-mix(in srgb, var(--void) 88%, transparent) 100%);
-    }
-    .gallery-overlay-icon { display: none; }
-    .lightbox-close { top: 0.7rem; right: 0.7rem; width: 38px; height: 38px; }
-    .lightbox-prev, .lightbox-next { width: 40px; height: 40px; }
+    /* No hover on touch, so captions are hidden until the photo is opened. */
+    .gallery-overlay { display: none; }
+    .lightbox-close { top: 0.7rem; right: 0.7rem; width: 40px; height: 40px; }
+    .lightbox-prev, .lightbox-next { width: 40px; height: 40px; top: auto; bottom: 1rem; transform: none; }
     .lightbox-prev { left: 0.7rem; }
     .lightbox-next { right: 0.7rem; }
 }
 
 /* --------------------------------------------------------------------------
-   Breadcrumb, static pages
+   Breadcrumb, prose, 404
    -------------------------------------------------------------------------- */
 
-.breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-pixel); font-size: 0.8rem; color: var(--muted); flex-wrap: wrap; }
-.breadcrumb a:hover { color: var(--cyan); }
-.breadcrumb-sep { color: var(--edge); }
+.breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--muted); flex-wrap: wrap; }
+.breadcrumb a:hover { color: var(--ink); }
+.breadcrumb-sep { color: var(--rule); }
 
 .content-page { padding-bottom: 4.5rem; }
 
-/* Generic long-form prose (currently: the About page body). Every child
-   (p, li, blockquote, strong, em) inherits the family from here; only the
-   headings below need their own rule, for weight and size. */
-.prose { font-family: var(--font-body); font-size: 1.05rem; line-height: 1.7; }
+.prose { font-size: 1.06rem; line-height: 1.7; }
 .prose > * + * { margin-top: 1.1em; }
-.prose h2, .prose h3 {
-    font-family: var(--font-sign);
-    font-weight: 700;
-    line-height: 1.25;
-    margin-top: 1.8em;
-}
-.prose h2 { font-size: 1.4rem; }
+.prose h2, .prose h3 { font-weight: 650; line-height: 1.25; letter-spacing: -0.02em; margin-top: 1.8em; }
+.prose h2 { font-size: 1.45rem; }
 .prose h3 { font-size: 1.15rem; }
-.prose a { color: var(--cyan); text-decoration: underline; text-underline-offset: 3px; }
-.prose a:hover { color: var(--sign); text-shadow: 0 0 12px color-mix(in srgb, var(--cyan) 60%, transparent); }
-.prose strong { color: var(--sign); }
+.prose a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.prose a:hover { text-decoration-thickness: 2px; }
+.prose strong { font-weight: 650; }
 .prose blockquote {
     margin: 1.4em 0;
     padding: 0.2em 0 0.2em 1.2em;
-    border-left: 2px solid var(--accent);
-    box-shadow: -2px 0 14px -6px var(--accent);
+    border-left: 2px solid var(--rule);
     color: var(--muted);
 }
 .prose ul, .prose ol { padding-left: 1.4em; }
 .prose ul { list-style: disc; }
 .prose ol { list-style: decimal; }
 .prose li + li { margin-top: 0.4em; }
-.prose img, .prose figure { border-radius: var(--radius-panel); margin: 1.6em auto; }
+.prose img, .prose figure { border-radius: var(--radius-photo); margin: 1.6em auto; }
 .prose figcaption { font-size: 0.85rem; color: var(--muted); text-align: center; margin-top: 0.6em; }
 .prose code {
-    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-family: var(--font-mono);
     font-size: 0.88em;
-    background: var(--panel-2);
-    border: 1px solid var(--edge);
+    background: var(--surface-2);
     border-radius: 4px;
     padding: 0.1em 0.35em;
 }
 .prose pre {
-    background: var(--panel-2);
-    border: 1px solid var(--edge);
-    border-radius: var(--radius-panel);
+    background: var(--surface-2);
+    border-radius: var(--radius);
     padding: 1.1rem 1.3rem;
     overflow-x: auto;
 }
-.prose pre code { background: none; border: none; padding: 0; }
+.prose pre code { background: none; padding: 0; }
 
-.not-found { padding: 6rem 0; text-align: center; }
+.not-found { padding: clamp(4rem, 14vh, 8rem) 0; }
 .not-found-code {
-    font-family: var(--font-pixel);
-    font-size: clamp(4rem, 14vw, 7rem);
+    font-size: clamp(4.5rem, 16vw, 9rem);
+    font-weight: 700;
     line-height: 1;
-    color: var(--sign);
-    text-shadow:
-        0 0 6px color-mix(in srgb, var(--magenta) 80%, transparent),
-        0 0 24px color-mix(in srgb, var(--magenta) 50%, transparent),
-        0 0 60px color-mix(in srgb, var(--magenta) 25%, transparent);
+    letter-spacing: -0.06em;
+    color: var(--rule);
 }
-.not-found-kana { font-family: var(--font-pixel); letter-spacing: 0.3em; color: var(--muted); margin-top: 1rem; }
-.not-found-title { font-family: var(--font-pixel); font-size: clamp(1.5rem, 4.5vw, 2.1rem); letter-spacing: 0.02em; margin-top: 0.8rem; }
-.not-found-text { color: var(--muted); max-width: 420px; margin: 0.8rem auto 2rem; }
-
-.view-all { margin-top: 2.5rem; }
+.not-found-title { font-size: clamp(1.6rem, 4.5vw, 2.2rem); font-weight: 700; letter-spacing: -0.03em; margin-top: 1rem; }
+.not-found-text { color: var(--muted); max-width: 440px; margin: 0.7rem 0 2rem; }
 
 /* --------------------------------------------------------------------------
    Footer
    -------------------------------------------------------------------------- */
 
-.footer { border-top: 1px solid var(--edge); background: var(--panel); margin-top: 3rem; }
-.footer-inner { padding-top: 2.8rem; padding-bottom: 2rem; }
-.footer-top { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
-.footer-tagline { font-family: var(--font-pixel); font-size: 0.95rem; letter-spacing: 0.04em; }
-.footer-links { display: flex; gap: 1.3rem; flex-wrap: wrap; }
-.footer-links a { font-family: var(--font-pixel); font-size: 0.8rem; letter-spacing: 0.06em; color: var(--muted); }
-.footer-links a:hover { color: var(--cyan); }
-.footer-social { display: flex; gap: 0.6rem; }
+.footer { border-top: 1px solid var(--rule); }
+.footer-inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem 2rem;
+    flex-wrap: wrap;
+    padding-top: 1.75rem;
+    padding-bottom: 1.75rem;
+}
+.footer-text { color: var(--muted); font-size: 0.88rem; margin-right: auto; }
+.footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.footer-links a { font-size: 0.88rem; color: var(--muted); }
+.footer-links a:hover { color: var(--ink); }
+.footer-social { display: flex; gap: 0.25rem; }
+.footer-social:empty { display: none; }
 .footer-social-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 36px;
     height: 36px;
-    border: 1px solid var(--edge);
-    border-radius: var(--radius);
+    border-radius: 999px;
     color: var(--muted);
-    transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: color 0.15s ease, background 0.15s ease;
 }
-.footer-social-link:hover {
-    color: var(--cyan);
-    border-color: var(--cyan);
-    box-shadow: 0 0 14px -4px color-mix(in srgb, var(--cyan) 70%, transparent);
-}
-.footer-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-    border-top: 1px solid var(--edge);
-    margin-top: 2rem;
-    padding-top: 1.4rem;
-}
-.footer-text { color: var(--muted); font-size: 0.85rem; }
-.footer-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-pixel);
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-}
-.footer-status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--lime);
-    box-shadow: 0 0 8px var(--lime);
-}
-@media (prefers-reduced-motion: no-preference) {
-    .footer-status-dot { animation: live-pulse 2.4s ease-in-out infinite; }
-}
+.footer-social-link:hover { color: var(--ink); background: var(--surface-2); }
 
 /* ---------------------------------------------------------------------------
    Analytics consent notice
@@ -928,63 +601,29 @@ dialog.lightbox::backdrop { background: color-mix(in srgb, #060309 95%, transpar
     flex-direction: column;
     gap: 0.75rem;
     padding: 1rem 1.125rem;
-    background: var(--panel);
-    border: 1px solid var(--edge);
-    border-top: 1px solid var(--cyan);
-    border-radius: var(--radius-panel);
-    box-shadow: 0 8px 32px var(--shadow-ink), 0 0 18px -8px var(--cyan);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    box-shadow: 0 10px 36px var(--shadow-ink);
 }
-
-.sd-notice-text {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    line-height: 1.55;
-    color: var(--muted);
-}
-
+.sd-notice-text { margin: 0; font-size: 0.85rem; line-height: 1.55; color: var(--muted); }
 .sd-notice-actions { display: flex; gap: 0.5rem; }
-
 .sd-notice-btn-accept,
 .sd-notice-btn-reject {
     padding: 0.45rem 1rem;
-    font-family: var(--font-pixel);
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
-    border-radius: var(--radius);
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 999px;
     border: 1px solid transparent;
     cursor: pointer;
-    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-
-.sd-notice-btn-accept {
-    background: var(--accent);
-    color: var(--void);
-    box-shadow: 0 0 16px -2px color-mix(in srgb, var(--accent) 60%, transparent);
-}
-
-.sd-notice-btn-accept:hover {
-    background: var(--cyan);
-    box-shadow: 0 0 20px -2px color-mix(in srgb, var(--cyan) 65%, transparent);
-}
-
-.sd-notice-btn-reject {
-    background: transparent;
-    color: var(--sign);
-    border-color: var(--edge);
-}
-
-.sd-notice-btn-reject:hover {
-    border-color: var(--cyan);
-    color: var(--cyan);
-}
+.sd-notice-btn-accept { background: var(--ink); color: var(--bg); }
+.sd-notice-btn-accept:hover { background: var(--accent); }
+.sd-notice-btn-reject { background: transparent; color: var(--ink); border-color: var(--rule); }
+.sd-notice-btn-reject:hover { border-color: var(--ink); }
 
 /* Phones: span the width so the buttons stay comfortably tappable. */
 @media (max-width: 560px) {
-    #sd-notice {
-        left: 1rem;
-        right: 1rem;
-        bottom: 1rem;
-        max-width: none;
-    }
+    #sd-notice { left: 1rem; right: 1rem; bottom: 1rem; max-width: none; }
 }

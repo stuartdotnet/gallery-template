@@ -8,8 +8,9 @@
 {{/* charset stays first: browsers only honour it inside the first 1024 bytes. */}}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-{{/* --void. Tints the browser chrome on mobile so the page reads as one surface. */}}
-<meta name="theme-color" content="#060309">
+{{/* --bg in each theme. Tints the browser chrome on mobile so the page reads as one surface. */}}
+<meta name="theme-color" content="#FAFAF9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
 
 {{- with .Site.Params.googleAnalytics }}
 {{/* Google tag (gtag.js). Consent Mode defaults analytics_storage to denied, so
@@ -119,12 +120,11 @@ gtag('config', '{{ . }}');
 {{- end }}
 
 <title>{{ $title }}</title>
-{{/* Favicon: a lit node on a cyan trace — the site in one glyph. */}}
-<link rel="icon" href="data:image/svg+xml,{{ `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='5' fill='%23060309'/><rect x='0' y='14.5' width='32' height='3' fill='%2300F0FF'/><rect x='7' y='7' width='18' height='18' rx='2' fill='%23060309' stroke='%23FF2E88' stroke-width='3'/></svg>` | safeURL }}">
+{{/* Favicon: a pale print in a dark frame. Colours are --ink and --bg. */}}
+<link rel="icon" href="data:image/svg+xml,{{ `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23161616'/><rect x='8' y='8' width='16' height='16' rx='1.5' fill='%23FAFAF9'/></svg>` | safeURL }}">
 
-<link rel="preload" href="/fonts/zenkaku-900.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/dotgothic-kana.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/styles.css">
 {{/* Set data-theme before paint so the page never flashes the wrong theme.
-     Defaults to dark — the site's native theme — when nothing is stored yet. */}}
-<script>(function(){var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');})();</script>
+     With nothing stored yet it follows the visitor's system setting. */}}
+<script>(function(){var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);})();</script>

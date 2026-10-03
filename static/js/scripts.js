@@ -2,14 +2,14 @@
     'use strict';
 
     // Theme toggle. head.html already set data-theme (from localStorage,
-    // defaulting to 'dark') before paint to avoid a flash of the wrong theme.
+    // else the system setting) before paint to avoid a flash of the wrong theme.
     var themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', function () {
-            var current = document.documentElement.getAttribute('data-theme') || 'dark';
+            var current = document.documentElement.getAttribute('data-theme') || 'light';
             var next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
+            try { localStorage.setItem('theme', next); } catch (e) {}
         });
     }
 
