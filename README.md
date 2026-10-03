@@ -162,5 +162,6 @@ use, no permission needed) via [Lorem Picsum](https://picsum.photos):
 
 ## Licence
 
-MIT. Use it, change it, sell it, no attribution needed. The bundled font keeps
-its own SIL Open Font Licence.
+MIT. Use it, change it, sell it. The one condition is that you keep the copyright
+notice and the `LICENSE` file with the code. No credit is needed on your
+finished site. The bundled font keeps its own SIL Open Font Licence.
