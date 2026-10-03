@@ -645,7 +645,7 @@ button { font: inherit; cursor: pointer; }
     border: 1px solid var(--edge);
     border-radius: var(--radius-panel);
     overflow: hidden;
-    cursor: zoom-in;
+    cursor: pointer;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .gallery-thumb img {
