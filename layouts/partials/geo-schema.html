@@ -1,0 +1,90 @@
+{{/*
+    Structured data for the home page: WebSite, the person (or organisation)
+    behind it, the gallery itself with one ImageObject per photo, and a FAQPage
+    when data/faq.yaml has real entries. Linked by @id.
+
+    Configure under [params.geo] in hugo.toml:
+      entityType  "Person" (default) or "Organization"
+      sameAs      extra profile URLs, on top of everything under [params.social]
+      knowsAbout  subjects you photograph
+*/}}
+{{- $geo := site.Params.geo | default dict -}}
+{{- $base := site.BaseURL -}}
+{{- $entityID := printf "%s#entity" $base -}}
+{{- $same := slice -}}
+{{- range $k, $v := site.Params.social }}{{ if and $v (not (findRE `/@?example/?$` $v)) }}{{ $same = $same | append $v }}{{ end }}{{ end -}}
+{{- range $geo.sameAs }}{{ $same = $same | append . }}{{ end -}}
+{{- $faq := partial "faq-items.html" . -}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "{{ $base }}#website",
+      "url": "{{ $base }}",
+      "name": {{ site.Title | jsonify | safeJS }},
+      "description": {{ site.Params.description | jsonify | safeJS }},
+      "inLanguage": {{ site.Language.Locale | default "en" | jsonify | safeJS }},
+      "publisher": { "@id": "{{ $entityID }}" }
+    },
+    {
+      "@type": {{ $geo.entityType | default "Person" | jsonify | safeJS }},
+      "@id": "{{ $entityID }}",
+      "name": {{ site.Params.author | default site.Title | jsonify | safeJS }},
+      "url": "{{ $base }}",
+      "description": {{ site.Params.description | jsonify | safeJS }}
+      {{- with $same }},
+      "sameAs": {{ . | jsonify | safeJS }}
+      {{- end }}
+      {{- with $geo.knowsAbout }},
+      "knowsAbout": {{ . | jsonify | safeJS }}
+      {{- end }}
+    }
+    {{- with .Params.photos }},
+    {
+      "@type": "ImageGallery",
+      "@id": "{{ $.Permalink }}#gallery",
+      "url": "{{ $.Permalink }}",
+      "name": {{ site.Title | jsonify | safeJS }},
+      "creator": { "@id": "{{ $entityID }}" },
+      "image": [
+        {{- $n := 0 }}
+        {{- range $meta := . }}
+        {{- with $.Resources.GetMatch $meta.image }}
+        {{- $full := .Resize "1800x webp q85" }}
+        {{- if $n }},{{ end }}{{ $n = add $n 1 }}
+        {
+          "@type": "ImageObject",
+          "contentUrl": "{{ $full.Permalink }}",
+          "width": {{ $full.Width }},
+          "height": {{ $full.Height }},
+          "description": {{ $meta.alt | jsonify | safeJS }}
+          {{- with $meta.caption }},
+          "caption": {{ . | jsonify | safeJS }}
+          {{- end }},
+          "creator": { "@id": "{{ $entityID }}" }
+        }
+        {{- end }}
+        {{- end }}
+      ]
+    }
+    {{- end }}
+    {{- if $faq }},
+    {
+      "@type": "FAQPage",
+      "@id": "{{ .Permalink }}#faq",
+      "mainEntity": [
+        {{- range $i, $f := $faq }}{{ if $i }},{{ end }}
+        {
+          "@type": "Question",
+          "name": {{ $f.q | jsonify | safeJS }},
+          "acceptedAnswer": { "@type": "Answer", "text": {{ $f.a | markdownify | plainify | jsonify | safeJS }} }
+        }
+        {{- end }}
+      ]
+    }
+    {{- end }}
+  ]
+}
+</script>

@@ -128,6 +128,49 @@ Then set `baseURL` in `hugo.toml` to your real address.
 - **Themes**: light and dark, following the visitor's system setting until
   they pick one with the toggle. The lightbox is always dark.
 
+## Show up in AI answers
+
+Assistants like ChatGPT, Claude, Gemini, Perplexity and Copilot answer from
+search indexes plus pages they can read as plain HTML. The template does the
+on-site half of that for you:
+
+- **`robots.txt`** names the AI retrieval and training crawlers (OAI-SearchBot,
+  ChatGPT-User, GPTBot, PerplexityBot, ClaudeBot, Claude-SearchBot,
+  Google-Extended, Applebot-Extended, bingbot) and allows them. Set
+  `params.geo.aiCrawlers = false` to remove the named groups.
+- **`/llms.txt`** is generated from your menu and social links. Put a one or two
+  sentence factual summary in `params.geo.summary`.
+- **Structured data** on the home page: a `WebSite`, the `Person` (or
+  `Organization`) behind it with `sameAs` built from `[params.social]` plus
+  `params.geo.sameAs`, and an `ImageGallery` listing every photo with its alt
+  text as the description and your caption. Placeholder `example` URLs are
+  skipped, so nothing bogus ships.
+- **FAQ**: fill in `data/faq.yaml` and a visible FAQ appears on the About page,
+  with matching `FAQPage` markup on the home page. Entries starting with `TODO`
+  are skipped (and warn at build). Open each answer with a sentence that stands
+  alone, because that is the bit an assistant quotes. Good questions: who took
+  these, where, can I use or buy a print.
+- **Alt text** is what a model "sees" of a photo. Write what is in the frame in
+  one plain sentence, not keywords.
+- Static HTML from the start, so there is no JavaScript wall for crawlers.
+
+The off-site half is up to you:
+
+1. Verify the site in **Bing Webmaster Tools** and **Google Search Console** and
+   submit `sitemap.xml`. ChatGPT and Copilot lean on Bing, Gemini on Google.
+2. Optional: **IndexNow** pings Bing when pages change. Cloudflare's Crawler
+   Hints does this for you; otherwise host a key file in `static/` and POST
+   your changed URLs to `https://api.indexnow.org/indexnow`.
+3. Use one name everywhere (Instagram, Flickr, 500px, LinkedIn), each linking
+   back to the site, so assistants resolve it as one entity.
+4. Get mentioned elsewhere. Third-party mentions beat your own pages.
+5. Measure with `geo/prompts.csv`: replace the placeholders with the questions
+   people would ask, run each in a few assistants, 2 or 3 times, with web search
+   on and off, and log whether you are absent, mentioned or cited. Repeat monthly.
+
+If your host minifies HTML (Cloudflare Auto Minify does), empty `alt=""` becomes
+a bare `alt`, which some audit tools flag as missing.
+
 ## Layout
 
 ```
@@ -135,6 +178,10 @@ content/_index.md        the gallery: front matter lists the photos
 content/*.jpg            your photo files, next to _index.md
 content/about.md         the About page
 layouts/partials/gallery.html   the mosaic and lightbox
+layouts/partials/geo-schema.html  structured data for the home page
+layouts/index.llms.txt   builds /llms.txt
+data/faq.yaml            FAQ for the About page and FAQPage markup
+geo/prompts.csv          prompts to test your AI visibility
 static/css/styles.css    the whole design, tokens at the top
 static/contenteditor/    the upload screen
 hugo.toml                site settings

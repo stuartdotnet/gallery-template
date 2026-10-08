@@ -30,6 +30,7 @@ gtag('config', '{{ . }}');
 
 {{/* --- Derived values ------------------------------------------------- */}}
 {{- $title := cond .IsHome .Site.Title (printf "%s - %s" .Title .Site.Title) -}}
+{{- with site.Params.geo.homeTitle -}}{{ if $.IsHome }}{{ $title = . }}{{ end }}{{- end -}}
 {{- with .Params.metaTitle -}}{{ $title = . }}{{- end -}}
 {{- $desc := .Site.Params.description -}}
 {{- if not .IsHome -}}
@@ -39,7 +40,7 @@ gtag('config', '{{ . }}');
 {{- end -}}
 {{- $ogType := "website" -}}
 {{- $ogTitle := $title -}}
-{{- if .IsHome -}}{{ $ogTitle = .Site.Title }}{{- end -}}
+{{- if .IsHome -}}{{ $ogTitle = $title }}{{- end -}}
 
 {{/* og:image — front-matter override, else first in-content image. No site-wide
      default ships with the template, so the tag is simply omitted until one is set. */}}
@@ -102,21 +103,10 @@ gtag('config', '{{ . }}');
 {{- end }}
 <link rel="canonical" href="{{ .Permalink }}">
 
-{{/* Structured data: WebSite on the home page */}}
+{{/* Structured data on the home page: WebSite, the person behind it, an
+     ImageGallery of every photo and an optional FAQPage (geo-schema.html). */}}
 {{- if .IsHome }}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebSite",
-      "name": {{ .Site.Title | jsonify | safeJS }},
-      "url": "{{ .Site.BaseURL }}",
-      "description": {{ .Site.Params.description | jsonify | safeJS }}
-    }
-  ]
-}
-</script>
+{{ partial "geo-schema.html" . }}
 {{- end }}
 
 <title>{{ $title }}</title>

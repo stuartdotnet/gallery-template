@@ -42,6 +42,21 @@ disableKinds = ['taxonomy', 'term']
     x = 'https://x.com/example'
     youtube = 'https://youtube.com/@example'
 
+  # Generative engine optimisation. See "Show up in AI answers" in README.md.
+  [params.geo]
+    # "Person" or "Organization". Who is behind the gallery, for structured data.
+    entityType = 'Person'
+    # Overrides params.description in /llms.txt. One or two factual sentences.
+    summary = ''
+    # Profile URLs beyond [params.social], e.g. Flickr, 500px, a portfolio.
+    sameAs = []
+    # Subjects you photograph.
+    knowsAbout = []
+    # Set false to drop the named AI crawler groups from robots.txt.
+    aiCrawlers = true
+    # Optional <title> for the home page. Defaults to the site title.
+    homeTitle = ''
+
 [menu]
   [[menu.main]]
     name = 'Gallery'
@@ -58,8 +73,16 @@ disableKinds = ['taxonomy', 'term']
     [markup.goldmark.renderer]
       unsafe = true
 
+# /llms.txt, generated from layouts/index.llms.txt so it follows baseURL.
+[outputFormats]
+  [outputFormats.LLMS]
+    mediaType = 'text/plain'
+    baseName = 'llms'
+    isPlainText = true
+    notAlternative = true
+
 [outputs]
-  home = ['HTML', 'RSS']
+  home = ['HTML', 'RSS', 'LLMS']
   section = ['HTML', 'RSS']
 
 [security]

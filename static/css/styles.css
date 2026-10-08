@@ -627,3 +627,13 @@ dialog.lightbox::backdrop { background: color-mix(in srgb, var(--stage) 96%, tra
 @media (max-width: 560px) {
     #sd-notice { left: 1rem; right: 1rem; bottom: 1rem; max-width: none; }
 }
+
+/* --------------------------------------------------------------------------
+   FAQ (About page; answer-first content for search and AI assistants)
+   -------------------------------------------------------------------------- */
+
+.faq { margin-top: 3rem; }
+.faq-title { font-size: 1.45rem; font-weight: 650; letter-spacing: -0.02em; margin-bottom: 1rem; }
+.faq-item { border-top: 1px solid var(--rule); padding: 1.1rem 0; }
+.faq-q { font-size: 1.05rem; font-weight: 650; line-height: 1.35; margin-bottom: 0.4rem; }
+.faq-a { color: var(--muted); font-size: 1rem; }

@@ -1,0 +1,11 @@
+# FAQ, shown on the About page. Rendered as visible text AND as FAQPage JSON-LD
+# (on the home page) from this one file, so write it once. Entries starting with
+# "TODO" are skipped (and warn at build), so nothing ships until you replace them.
+#
+# Write answer first: the opening sentence must make sense if an AI assistant
+# quotes only that. Good gallery questions: who took these, where, with what
+# camera, can I use or buy a print, how do I get in touch. Markdown is allowed.
+- q: "TODO: Who took these photos?"
+  a: "TODO: Your name, where you are based, what you shoot."
+- q: "TODO: Can I use or print one of your photos?"
+  a: "TODO: Your licence terms and who to ask."
